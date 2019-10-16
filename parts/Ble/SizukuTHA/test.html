@@ -1,0 +1,39 @@
+<html>
+<head>
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+  <script src="obniz/obniz.js"></script>
+</head>
+<body>
+
+<script>
+  function toHexString(byteArray) {
+    return Array.from(byteArray, function(byte) {
+      return ('0' + (byte & 0xFF).toString(16)).slice(-2);
+    }).join(' ')
+  }
+
+  var obniz = new Obniz("46273152");
+  obniz.onconnect = async function () {
+    console.log("Connected..");        
+    console.log(obniz);
+    /*
+    obniz.ble.scan.onfind = function(peripheral){
+     console.log(peripheral)
+    };
+    let target = {
+      localName: 'Sizuku_tha*',
+    };
+    obniz.ble.scan.start(target);
+    await obniz.wait(5000);
+    obniz.ble.scan.end();
+    */
+    let sizuku = obniz.wired('SizukuTHA', {'serial': '0142095'});
+    await sizuku.connectWait();
+    await sizuku.discoverServices();
+    //let data = await sizuku.getLatestData(30000);
+    
+    sizuku.subscribeTemperature();
+  }
+</script>
+</body>
+</html>
